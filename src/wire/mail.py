@@ -179,7 +179,7 @@ class LabeledEmailer:
         context = context or {}
         context.update(
             site=Site.objects.get_current(),
-            url_scheme=settings.URL_SCHEME,
+            url_scheme=getattr(settings, "URL_SCHEME", "https"),
         )
 
         if not isinstance(recipients, (list, tuple)):
@@ -237,3 +237,5 @@ def __send_mail_sdk(
 
 
 labeled_emailer = LabeledEmailer()
+send_labeled_mail = labeled_emailer.send
+
