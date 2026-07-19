@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import AccessMixin
+from wire.forms import PasswordResetForm
 
 
 class StaffRequiredMixin(AccessMixin):

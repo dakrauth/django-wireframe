@@ -1,0 +1,29 @@
+{% extends "registration/base.html" %}
+{% block title %}Login{% endblock title %}
+{% block extra_head %}
+{{ block.super }}
+<style>
+    .submit > span {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+    }
+    .submit > span button { width: 5em; }
+</style>
+{% endblock extra_head %}
+{% block account_heading %}Account Login{% endblock %}
+{% block account_content %}
+    <form method="POST" action="{% url 'login' %}?next={{ next|default:"/" }}">{% csrf_token %}
+        {{ form.as_p }}
+        <p class="submit">
+            <label></label>
+            <span>
+                <button class="btn" type="submit">Login</button>
+                <em class="align-center">
+                    <a href="{% url 'password_reset' %}">Forgot your password?</a>
+                </em>
+            </span>
+        </p>
+    </form>
+{% endblock %}
+
