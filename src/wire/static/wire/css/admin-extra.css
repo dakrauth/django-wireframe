@@ -1,0 +1,20 @@
+body:before {
+    display: block;
+    line-height: 35px;
+    text-align: center;
+    text-transform: uppercase;
+    font-stretch: expanded;
+    color: white;
+}
+textarea[name="content"] {
+    font-family: monospace;
+    height: 20em;
+}
+textarea.monospace-textarea {
+    font-family: monospace;
+}
+.form-row.field-content textarea.vLargeTextField {
+    font-family: monospace;
+    height: 30em;
+    flex-grow: 1;
+}
