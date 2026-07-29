@@ -1,4 +1,5 @@
 from django import forms
+from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm as BasePasswordResetForm
 
@@ -8,7 +9,33 @@ from wire.mail import send_labeled_mail
 DEFAULT_MONOSPACED_TEXTAREA_ATTRS = {"cols": "72", "rows": "15"}
 
 
-class PasswordResetForm(BasePasswordResetForm):
+class BasePasswordForm(BasePasswordResetForm):
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def get_context_data(self, **kwargs):
+        link = reverse(
+            "password_reset_confirm",
+            kwargs={"uidb64": kwargs["uid"], "token": kwargs["token"]}
+        )
+
+        user = self.user
+        full_name = " ".join([user.first_name, user.last_name]).strip() or user.username
+        kwargs.update(
+            title=self.title,
+            preheader=self.preheader,
+            salutation=f"Hello, {full_name}",
+            lines=[
+                self.description_line.format(**kwargs),
+                "Please click on the link below and choose a new password.",
+            ],
+            url_scheme=kwargs["protocol"],
+            link=link,
+            link_text=self.link_text,
+        )
+        return kwargs
+
     def send_mail(
         self,
         subject_template_name,
@@ -20,9 +47,22 @@ class PasswordResetForm(BasePasswordResetForm):
     ):
         send_labeled_mail(
             "password_reset",
-            context=context,
+            context=self.get_context_data(**context),
             recipients=[to_email],
         )
+
+class PasswordResetForm(BasePasswordForm):
+    title = "Password Reset"
+    preheader = "Password Reset"
+    description_line = "You're receiving this email because you requested a password reset for your user account at {site_name}."
+    link_text = "Reset Password"
+
+
+class PasswordInitializeForm(BasePasswordForm):
+    title = "Password Initialization"
+    preheader = "Password Initialization"
+    description_line = "You're receiving this email because you need to set a password for your user account at {site_name}."
+    link_text = "Initialize Password"
 
 
 class MonospacedTextarea(forms.Textarea):

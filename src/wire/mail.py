@@ -180,6 +180,7 @@ class LabeledEmailer:
         context.update(
             site=Site.objects.get_current(),
             url_scheme=getattr(settings, "URL_SCHEME", "https"),
+            **self.kwargs
         )
 
         if not isinstance(recipients, (list, tuple)):
