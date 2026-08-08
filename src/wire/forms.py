@@ -10,9 +10,8 @@ DEFAULT_MONOSPACED_TEXTAREA_ATTRS = {"cols": "72", "rows": "15"}
 
 
 class BasePasswordForm(BasePasswordResetForm):
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user = user
 
     def get_context_data(self, **kwargs):
         link = reverse(
@@ -20,12 +19,10 @@ class BasePasswordForm(BasePasswordResetForm):
             kwargs={"uidb64": kwargs["uid"], "token": kwargs["token"]}
         )
 
-        user = self.user
-        full_name = " ".join([user.first_name, user.last_name]).strip() or user.username
         kwargs.update(
             title=self.title,
             preheader=self.preheader,
-            salutation=f"Hello, {full_name}",
+            salutation=f"Hello,",
             lines=[
                 self.description_line.format(**kwargs),
                 "Please click on the link below and choose a new password.",
