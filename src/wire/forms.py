@@ -19,10 +19,11 @@ class BasePasswordForm(BasePasswordResetForm):
             kwargs={"uidb64": kwargs["uid"], "token": kwargs["token"]}
         )
 
+        name = self.user.first_name or getattr(self.user, "username", None) or self.user.email
         kwargs.update(
             title=self.title,
             preheader=self.preheader,
-            salutation=f"Hello,",
+            salutation=f"Hello, {name}",
             lines=[
                 self.description_line.format(**kwargs),
                 "Please click on the link below and choose a new password.",
@@ -48,6 +49,11 @@ class BasePasswordForm(BasePasswordResetForm):
             recipients=[to_email],
         )
 
+    def save(self, user, *args, **kwargs):
+        self.user = user
+        return super().save(*args, **kwargs)
+
+
 class PasswordResetForm(BasePasswordForm):
     title = "Password Reset"
     preheader = "Password Reset"
@@ -60,6 +66,7 @@ class PasswordInitializeForm(BasePasswordForm):
     preheader = "Password Initialization"
     description_line = "You're receiving this email because you need to set a password for your user account at {site_name}."
     link_text = "Initialize Password"
+
 
 
 class MonospacedTextarea(forms.Textarea):

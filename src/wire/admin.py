@@ -25,9 +25,9 @@ class UserAdmin(auth_admin.UserAdmin):
                 self.message_user(request, f"User {user} skipped: no email")
                 continue
 
-            form = form_class(user, {"email": user.email})
+            form = form_class({"email": user.email})
             form.full_clean()
-            form.save(use_https=request.is_secure(), request=request)
+            form.save(user, use_https=request.is_secure(), request=request)
 
     def send_password_initializion(self, request, queryset):
         self.send_password_email(request, queryset, self.password_init_form_class)
