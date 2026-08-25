@@ -10,7 +10,8 @@ from django.core.management.base import BaseCommand
 
 def execute(script):
     kws = {"__name__": "__main__", "__file__": script}
-    exec(compile(open(script).read(), script, "exec"), kws)
+    with open(script) as fp:
+        exec(compile(fp.read(), script, "exec"), kws)
 
 
 class Command(BaseCommand):
