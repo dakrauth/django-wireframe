@@ -91,6 +91,20 @@ def send_mail(
             data["to"] = ["dakrauth@gmail.com"]
         else:
             debug_mail(**data)
+            if getattr(settings, "WIRELOG_EMAILS", False):
+                wirelog(
+                    "mailgun",
+                    sub_label=data["subject"],
+                    status="1",
+                    data={
+                        "to": data["to"],
+                        "from": data["from"],
+                        "subject": data["subject"],
+                        "result": "No result",
+                        "details": "No details",
+                    },
+                )
+
             return 1
 
     try:
@@ -126,11 +140,17 @@ def send_mail(
 
 
 def pretty_email(recipient):
+    if isinstance(recipient, str):
+        return recipient
+
     if isinstance(recipient, (list, tuple)):
         name, email = recipient
         return f'"{name}" <{email}>'
 
-    return recipient
+    if hasattr(recipient, "email"):
+        return recipient.email
+
+    return str(recipient)
 
 
 class LabeledEmailer:
