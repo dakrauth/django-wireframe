@@ -19,11 +19,10 @@ class BasePasswordForm(BasePasswordResetForm):
             kwargs={"uidb64": kwargs["uid"], "token": kwargs["token"]}
         )
 
-        name = self.user.first_name or getattr(self.user, "username", None) or self.user.email
         kwargs.update(
             title=self.title,
             preheader=self.preheader,
-            salutation=f"Hello, {name}",
+            salutation=f"Greetings",
             lines=[
                 self.description_line.format(**kwargs),
                 "Please click on the link below and choose a new password.",
@@ -48,10 +47,6 @@ class BasePasswordForm(BasePasswordResetForm):
             context=self.get_context_data(**context),
             recipients=[to_email],
         )
-
-    def save(self, user, *args, **kwargs):
-        self.user = user
-        return super().save(*args, **kwargs)
 
 
 class PasswordResetForm(BasePasswordForm):
