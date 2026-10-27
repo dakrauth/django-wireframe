@@ -17,6 +17,8 @@ def csv_dict_read_text(text):
     return csv.DictReader(fp)
 
 
+
+
 def read_google_sheet(url):
     # https://docs.google.com/spreadsheets/d/1kAhlM57dGLYBZCksvJiSxgswzInKM98WIkZhoB037SI/edit?usp=sharing
     # https://docs.google.com/spreadsheets/d/1kAhlM57dGLYBZCksvJiSxgswzInKM98WIkZhoB037SI/export?format=csv&usp=sharing

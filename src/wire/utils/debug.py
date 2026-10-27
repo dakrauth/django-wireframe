@@ -1,3 +1,5 @@
+import sqlparse
+from django.db import connection
 from django.views import debug as debug_view
 
 
@@ -10,3 +12,7 @@ def technical_500_response(request, exc_type, exc_value, tb):
     html = reporter.get_traceback_html()
     text = reporter.get_traceback_text()
     return text, html
+
+
+def show_sql(index):
+    return sqlparse.format(connection.queries[index]["sql"], reindent=True, keyword_case='upper')

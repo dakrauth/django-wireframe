@@ -107,6 +107,9 @@ def send_mail(
 
             return 1
 
+    if settings.MAILGUN.get("test_mode", False):
+        return 0
+
     try:
         r = requests.post(
             settings.MAILGUN["url"], auth=("api", settings.MAILGUN["api_key"]), data=data
